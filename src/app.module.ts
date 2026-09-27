@@ -9,6 +9,7 @@ import { ProvidersModule } from './providers/providers.module.js';
 import { ManagersModule } from './managers/managers.module.js';
 import { LocationsModule } from './locations/locations.module.js';
 import { RegionsModule } from './regions/regions.module.js';
+import { AuthModule } from './auth/auth.module.js';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { RegionsModule } from './regions/regions.module.js';
       entities: [],
       autoLoadEntities: true,
       synchronize: true,
-  }), EmployeesModule, ProductsModule, ProvidersModule, ManagersModule, LocationsModule, RegionsModule,],
+  }), EmployeesModule, ProductsModule, ProvidersModule, ManagersModule, LocationsModule, RegionsModule, AuthModule,],
   controllers: [AppController],
   providers: [AppService],
 })
