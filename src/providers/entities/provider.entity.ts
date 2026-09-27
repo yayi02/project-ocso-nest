@@ -5,7 +5,7 @@ import { Product } from '../../products/entities/product.entity.js';
 
 export class Provider {
     @PrimaryColumn('uuid')
-    providerid: string;
+    providerId: string;
     @Column('text')
     providerName: string;
     @Column('text')
