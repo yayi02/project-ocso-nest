@@ -3,7 +3,13 @@ import { ProvidersService } from './providers.service.js';
 import { CreateProviderDto } from './dto/create-provider.dto.js';
 import { UpdateProviderDto } from './dto/update-provider.dto.js';
 import { NotFoundException } from '@nestjs/common';
+import { AuthGuard } from '../auth/guards/auth.guard.js';
+import { UserData } from '../auth/decorators/user.decorator.js';
+import { User } from '../auth/entities/user.entity.js';
+import { UnauthorizedException } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 
+@UseGuards(AuthGuard)
 @Controller('providers')
 export class ProvidersController {
   constructor(private readonly providersService: ProvidersService) {}
@@ -14,7 +20,10 @@ export class ProvidersController {
   }
 
   @Get()
-  findAll() {
+  findAll(@UserData() user: User) {
+    if (user.userRoles.includes("Employee")) {
+      throw new UnauthorizedException('No estas autorizado, solo admins y managers');
+    }
     return this.providersService.findAll();
   }
 

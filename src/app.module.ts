@@ -11,6 +11,7 @@ import { LocationsModule } from './locations/locations.module.js';
 import { RegionsModule } from './regions/regions.module.js';
 import { AuthModule } from './auth/auth.module.js';
 
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
