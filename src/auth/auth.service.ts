@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto.js';
 import {JwtService} from '@nestjs/jwt'
 import * as bcrypt from "bcrypt"
 import { LoginUserDto } from './dto/login-user.dto.js';
+import { UpdateUserDto } from './dto/update-user.dto.js';
 
 @Injectable()
 export class AuthService {
@@ -24,15 +25,24 @@ export class AuthService {
       where: {
         userEmail: loginUserDto.userEmail
       }
-    })
-    const match = await bcrypt.compare(loginUserDto.userPassword, user.userPassword)
-    if(!match) throw new UnauthorizedException
+    });
+    const match = await bcrypt.compare(loginUserDto.userPassword, user.userPassword);
+    if(!match) throw new UnauthorizedException();
     const payload = {
       userEmail:user.userEmail, 
-      userPassword:user.userPassword
-      userRoles:user.userRoles};
+      userPassword:user.userPassword,
+      userRoles:user.userRoles
+    };
 
     const token = this.jwtService.sign(payload);
     return token;
+  }
+  async updateUser(userEmail: string, updateUserDto: UpdateUserDto){
+    const newUserData = await this.userRepository.preload({
+      userEmail,
+      ...updateUserDto
+    });
+    this.userRepository.save(newUserData);
+    return newUserData;
   }
 }
