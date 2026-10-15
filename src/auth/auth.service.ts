@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity.js';
@@ -26,23 +26,25 @@ export class AuthService {
         userEmail: loginUserDto.userEmail
       }
     });
+    if(!user) throw new UnauthorizedException();
     const match = await bcrypt.compare(loginUserDto.userPassword, user.userPassword);
     if(!match) throw new UnauthorizedException();
     const payload = {
-      userEmail:user.userEmail, 
-      userPassword:user.userPassword,
-      userRoles:user.userRoles
+      userEmail: user.userEmail,
+      userRoles: user.userRoles
     };
 
     const token = this.jwtService.sign(payload);
     return token;
   }
   async updateUser(userEmail: string, updateUserDto: UpdateUserDto){
-    const newUserData = await this.userRepository.preload({
-      userEmail,
-      ...updateUserDto
-    });
-    this.userRepository.save(newUserData);
-    return newUserData;
+    const user = await this.userRepository.findOneBy({ userEmail });
+    if(!user) throw new NotFoundException();
+    if(updateUserDto.userPassword){
+      updateUserDto.userPassword = bcrypt.hashSync(updateUserDto.userPassword, 5);
+    }
+    Object.assign(user, updateUserDto);
+    return this.userRepository.save(user);
   }
 }
+

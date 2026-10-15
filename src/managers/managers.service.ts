@@ -19,18 +19,20 @@ export class ManagersService {
     return this.managerRepository.find();
   }
 
-  findOne(id: string) {
-    const manager = this.managerRepository.findOne({
+  async findOne(id: string) {
+    const manager = await this.managerRepository.findOneBy({
       managerId: id
     });
-    if(!manager) throw new NotFoundException
+    if(!manager) throw new NotFoundException();
+    return manager;
   }
 
-  async update(id: number, updateManagerDto: UpdateManagerDto) {
+  async update(id: string, updateManagerDto: UpdateManagerDto) {
     const managerToUpdate = await this.managerRepository.preload({
       managerId: id,
       ...updateManagerDto
     })
+    if(!managerToUpdate) throw new NotFoundException();
     return this.managerRepository.save(managerToUpdate);
   }
 
@@ -40,3 +42,4 @@ export class ManagersService {
     });
   }
 }
+

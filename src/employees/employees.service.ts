@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto.js';
 import { UpdateEmployeeDto } from './dto/update-employee.dto.js';
-import { v4 as uuid } from 'uuid';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from './entities/employee.entity.js';
 import { Repository } from 'typeorm';
@@ -42,12 +41,12 @@ export class EmployeesService {
       employeeId: id,
       ...updateEmployeeDto
     });
-    this.employeeRepository.save(employeeToUpdate!);
-    return employeeToUpdate;
+    if (!employeeToUpdate) throw new NotFoundException();
+    return this.employeeRepository.save(employeeToUpdate);
   }
 
-  remove(id: string) {
-    this.employeeRepository.delete({
+  async remove(id: string) {
+    await this.employeeRepository.delete({
       employeeId: id 
     });
     return `Employee deleted`;

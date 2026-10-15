@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+import type { Relation } from "typeorm";
 import { Provider } from "../../providers/entities/provider.entity.js";
 
 @Entity()
@@ -15,5 +16,5 @@ export class Product {
     @JoinColumn({
         name:"providerId"
     })
-    provider: Provider;
+    provider: Relation<Provider>;
 }

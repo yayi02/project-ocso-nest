@@ -1,4 +1,5 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import type { Relation } from "typeorm";
 import { Location } from "../../locations/entities/location.entity.js";
 import { User } from "../../auth/entities/user.entity.js";
 
@@ -18,11 +19,11 @@ export class Manager {
     managerPhoneNumber: string;
 
     @OneToOne(()=>Location)
-    location: Location;
+    location: Relation<Location>;
 
     @OneToOne(() => User)
     @JoinColumn({ 
         name: "userId"
     })
-    user: User;
+    user: Relation<User>;
 }

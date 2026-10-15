@@ -1,10 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import type { Relation } from "typeorm";
 import { Location } from "../../locations/entities/location.entity.js";
 import { User } from "../../auth/entities/user.entity.js";
 
 @Entity()
 export class Employee {
-    @PrimaryColumn('uuid')
+    @PrimaryGeneratedColumn('uuid')
       employeeId: string;
       @Column('text')
       employeeName: string;
@@ -26,11 +27,11 @@ export class Employee {
       @JoinColumn({
         name: "locationId"
       })
-      location: Location;
+      location: Relation<Location>;
 
       @OneToOne(() => User)
       @JoinColumn({
         name: "userId"
       })
-      user: User;
+      user: Relation<User>;
 }
