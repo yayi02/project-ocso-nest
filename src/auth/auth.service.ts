@@ -26,11 +26,15 @@ export class AuthService {
         userEmail: loginUserDto.userEmail
       }
     });
-    if(!user) throw new UnauthorizedException();
-    const match = await bcrypt.compare(loginUserDto.userPassword, user.userPassword);
-    if(!match) throw new UnauthorizedException();
+    if (!user) throw new UnauthorizedException("No estas autorizado")
+    const match = await bcrypt.compare(
+      loginUserDto.userPassword,
+      user.userPassword,
+    );
+    if (!match) throw new UnauthorizedException("No estas autorizado");
     const payload = {
       userEmail: user.userEmail,
+      userPassword: user.userPassword,
       userRoles: user.userRoles
     };
 
